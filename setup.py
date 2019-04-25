@@ -15,7 +15,6 @@ setup(name='fileshash',
       long_description=long_description,
       long_description_content_type='text/x-rst',
       classifiers=[
-            "Development Status :: 3 - Alpha",
             "Environment :: Console",
             "Intended Audience :: Developers",
             "Intended Audience :: End Users/Desktop",
@@ -33,6 +32,9 @@ setup(name='fileshash',
       author_email='m.more500@gmail.com',
       license='MIT',
       packages=['fileshash'],
+      install_requires=[
+          'xxhash',
+      ],
       include_package_data=True,
       zip_safe=False,
       entry_points={

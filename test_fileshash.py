@@ -20,7 +20,9 @@ class TestFileHash(unittest.TestCase):
                 'md5': '72f5d9e3a5fa2f2e591487ae02489388',
                 'sha1': 'f7ef3b7afaf1518032da1b832436ef3bbfd4e6f0',
                 'sha256': '52ee30e57cc262b84ff73377223818825583b8120394ef54e9b4cd7dbec57d18',
-                'sha512': 'dfc4e13af6e57b4982bdac595e83804dcb2d126204baa290f19015982d13e822a07efa1f0e63a8078e10f219c69d26caf4f21a50e3dd5bdf09bea73dfe224e43'
+                'sha512': 'dfc4e13af6e57b4982bdac595e83804dcb2d126204baa290f19015982d13e822a07efa1f0e63a8078e10f219c69d26caf4f21a50e3dd5bdf09bea73dfe224e43',
+                'xxh32': '8ae00d83',
+                'xxh64': 'e5a2ed25ee54bdbf',
             },
             'lorem_ipsum.zip': {
                 'adler32': '5195A9D6',
@@ -28,7 +30,9 @@ class TestFileHash(unittest.TestCase):
                 'md5': '860f55178330e675fb0d55ac1f2c27b2',
                 'sha1': '03da86258449317e8834a54cf8c4d5b41e7c7128',
                 'sha256': '8acac0dc358b981aef0dcecc6e6d8f4f1fb98968d61e613b430b2389d9d385e5',
-                'sha512': 'edd841dd0ed5bb09fd21054de3aebbbd44d779beaa0289d63bfb64f0eaaa85c73993d5cbc0d0d1dfcc263d7bd8d43bdafe2bcc398cc8453823e50f0d90a3b0ff'
+                'sha512': 'edd841dd0ed5bb09fd21054de3aebbbd44d779beaa0289d63bfb64f0eaaa85c73993d5cbc0d0d1dfcc263d7bd8d43bdafe2bcc398cc8453823e50f0d90a3b0ff',
+                'xxh32': '2a210637',
+                'xxh64': '6826dc4ff8c0d009',
             },
             'lorem_ipsum_txt+zip.cat': {
                 'adler32': '8BA81D03',
@@ -36,7 +40,9 @@ class TestFileHash(unittest.TestCase):
                 'md5': '96a7ef7737b1469621832ef6f5b0bc25',
                 'sha1': '1ac64d235601ba35d44c56953f338cba294bff9f',
                 'sha256': '49809760aa14e469d3b0bed8a4ba02d46fc5f61f5002499fe10e18d8c531925c',
-                'sha512': '986783f5f27cbed97b2b1646239ea34d25812c3cb69a80116137e544285a8032df940963ae42576931a35195c433ab0239ea012469b21fcb3df23fce21a9dfba'
+                'sha512': '986783f5f27cbed97b2b1646239ea34d25812c3cb69a80116137e544285a8032df940963ae42576931a35195c433ab0239ea012469b21fcb3df23fce21a9dfba',
+                'xxh32': '9b4a5a9c',
+                'xxh64': '2093baef2c98a42a',
             },
             'lorem_ipsum_zip+txt.cat': {
                 'adler32': 'F0A31D03',
@@ -44,7 +50,9 @@ class TestFileHash(unittest.TestCase):
                 'md5': '5ff44b587e9630bff7134b7e00726b44',
                 'sha1': 'f1741c227c170061863370cc89af4932fad5fcb7',
                 'sha256': '64bd25fbb84590cafd716d373796df3a2510e6a14104c30c7d83574cadd6277f',
-                'sha512': '775c5b1f2015f777485868ee6de013a29391c4e79c990adeb20d68412d8b650a18d6e3806ded4e0e2ffe197e2a51a52e651d09efe4895a3979f96c34d8cd4ce6'
+                'sha512': '775c5b1f2015f777485868ee6de013a29391c4e79c990adeb20d68412d8b650a18d6e3806ded4e0e2ffe197e2a51a52e651d09efe4895a3979f96c34d8cd4ce6',
+                'xxh32': 'f62ec14a',
+                'xxh64': '1c910bc0a0822dea',
             }
         }
         self.current_dir = os.getcwd()
@@ -54,44 +62,47 @@ class TestFileHash(unittest.TestCase):
         os.chdir(self.current_dir)
 
     def test_hash_file(self):
-        """Test the hash_file() method."""
+        """Test the full_parcel() method."""
         for algo in SUPPORTED_ALGORITHMS:
             for filename in self.expected_results.keys():
                 hasher = FilesHash(algo)
                 self.assertEqual(
                     self.expected_results[filename][algo],
-                    hasher.hash_file(filename)
+                    hasher.full_parcel(filename)
                     )
 
-    def test_cathash_files(self):
-        """Test the cathash_files() method."""
+    def test_cat_join(self):
+        """Test the cat_join() method."""
         for algo in SUPPORTED_ALGORITHMS:
+            hasher = FilesHash(
+                hash_algorithm=algo,
+                file_parcel="full_parcel",
+                files_join="cat_join"
+            )
             for filename in self.expected_results.keys():
-                hasher = FilesHash(algo)
                 self.assertEqual(
                     self.expected_results[filename][algo],
-                    hasher.cathash_files([filename])
+                    hasher.cat_join([filename])
                 )
 
-            hasher = FilesHash(algo)
             # shouldn't matter how you order filenames
             self.assertEqual(
-                hasher.cathash_files(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
-                hasher.cathash_files(['lorem_ipsum.zip', 'lorem_ipsum.txt']),
+                hasher.cat_join(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
+                hasher.cat_join(['lorem_ipsum.zip', 'lorem_ipsum.txt']),
                 )
             # filenames thmeselves shouldn't matter
             self.assertEqual(
-                hasher.cathash_files(['./lorem_ipsum.txt', 'lorem_ipsum.zip']),
-                hasher.cathash_files(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
+                hasher.cat_join(['./lorem_ipsum.txt', 'lorem_ipsum.zip']),
+                hasher.cat_join(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
                 )
             self.assertEqual(
-                hasher.cathash_files(['lorem_ipsum.txt', './lorem_ipsum.zip']),
-                hasher.cathash_files(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
+                hasher.cat_join(['lorem_ipsum.txt', './lorem_ipsum.zip']),
+                hasher.cat_join(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
                 )
             # hash of multiple files should be same as
             # hash of files catted together
             self.assertEqual(
-                hasher.cathash_files(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
+                hasher.cat_join(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
                 self.expected_results[
                     'lorem_ipsum_zip+txt.cat' if
                         (self.expected_results['lorem_ipsum.txt'][algo] >

@@ -9,7 +9,7 @@
 
 Python module to facilitate calculating the hash of multiple files.
 Tested against Python 2.7, Python 3.6, PyPy 2.7 and PyPy 3.5.
-Currently supports `Adler-32 <https://en.wikipedia.org/wiki/Adler-32>`_, `CRC32 <https://en.wikipedia.org/wiki/Cyclic_redundancy_check>`_, `MD5 <https://en.wikipedia.org/wiki/MD5>`_, `SHA-1 <https://en.wikipedia.org/wiki/SHA-1>`_, `SHA-256 and SHA-512 <https://en.wikipedia.org/wiki/SHA-2>`_.
+Currently supports `Adler-32 <https://en.wikipedia.org/wiki/Adler-32>`_, `CRC32 <https://en.wikipedia.org/wiki/Cyclic_redundancy_check>`_, `MD5 <https://en.wikipedia.org/wiki/MD5>`_, `SHA-1 <https://en.wikipedia.org/wiki/SHA-1>`_, `SHA-256 and SHA-512 <https://en.wikipedia.org/wiki/SHA-2>`_, and `xxHash-32 and xxHash-64 <https://xxhash.com>`_.
 
 Forked from Leonides T. Saguisag Jr.'s `FileHash <https://github.com/leonidessaguisagjr/filehash>`_.
 
@@ -27,8 +27,8 @@ The ``FileHash`` constructor has two optional arguments:
 - ``hash_algorithm='sha256'`` - Specifies the hashing algorithm to use.
 See ``filehash.SUPPORTED_ALGORITHMS`` for the list of supported hash / checksum algorithms.
 Defaults to SHA256.
-- ``chunk_size=4096`` - Integer specifying the chunk size to use (in bytes) when reading the file.
-This comes in useful when processing very large files to avoid having to read the entire file into memory all at once.  Default chunk size is 4096 bytes.
+- ``chunk_size=262144`` - Integer specifying the chunk size to use (in bytes) when reading the file.
+This comes in useful when processing very large files to avoid having to read the entire file into memory all at once.  Default chunk size is 262144 bytes.
 
 Example usage
 -------------

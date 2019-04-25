@@ -39,7 +39,7 @@ def create_parser():
 
 
 def process_cathash(filenames, hasher):
-    result = hasher.cathash_files(filenames)
+    result = hasher.cat_join(filenames)
     print("{0} *{1}".format(result, " ".join(filenames)))
 
 
@@ -48,7 +48,7 @@ def process_files(filenames, hasher):
         if not os.path.isfile(filename):
             print("ERROR: Unable to read file: {0}".format(filename))
             sys.exit(1)
-        result = hasher.hash_file(filename)
+        result = hasher.full_parcel(filename)
         print("{0} *{1}".format(result, filename))
 
 
