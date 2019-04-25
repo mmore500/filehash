@@ -12,3 +12,15 @@ install: pip install -U tox-travis
 
 # Command to run tests, e.g. python setup.py test
 script: tox
+
+# Auto deploy to pypi
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: mmore500
+  password:
+    secure: XY6H5F6AHonWCxU3LDtF+KuCd2WjeIOsHpCTySBIa3zeD8k0ffEv7nYF/Y+CXjF52Dzvvb5gP7cn8hAXBGCadDmh4ho9VvDj20XfG/E362rwg/cKIopJolmTTgnd6/8HW2lYIIU8os/8FXXstLmLiAoGBDJlGNrbyNEwGAbplJ27kG5M9v2KgqZLCSbO7wgd1W9WIvhv18A/Xd4VV0+1YZD5IfkEh5HrYvNNmgA/hL4+7WMSGz8PKEiL1TnurWisIHEEC1umkFT0MBo50gWC0ZurAPcujdbbVvEA8EuWamOAISOTeAUUGAG3TjceaBd9SjNYurV/DD4wBA6ZVTX4bb3b6SMiZQk8teJtqq037HUqvtLtkTNuJD8Qo/15GQz9juGE03riOW0meT7bZMg/HLKBrNwL+oX5W7OGuJj9HnwsKiE65hD5f6PTYiZjb+moFhhL8Rqsq5dhzHavcSf5qDZSdTTglK1OU7X3QkCQ27fS+jtlEDLiPiVIzpVqSsUOJXcJ7JtK9CpWE+shWMQ4xcKvCeh8NJMAzUNDkWVCSphm0CBPGxbAYBAJr3tvseSx+ne+CDyWKK5KWi4GS0h1paM+HHa0It8285BhlfGTqh+z6zJ+QUmT2gGxs1BhyDV+5Gb2JfCo+tJOEcFB7g4wQEQzqhtnInGFVvPFz3MXMeQ=
+  on:
+    tags: true
+    repo: mmore500/keyname
+    python: 3.6
