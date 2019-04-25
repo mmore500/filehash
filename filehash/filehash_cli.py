@@ -23,16 +23,6 @@ def create_parser():
 
     parser_group = parser.add_mutually_exclusive_group(required=True)
     parser_group.add_argument(
-        u"-c",
-        u"--checksums",
-        help=u"Read the file and verify the checksums/hashes match."
-        )
-    parser_group.add_argument(
-        u"-d",
-        u"--directory",
-        help=u"Calculate the checksums/hashes for a directory."
-        )
-    parser_group.add_argument(
         u"-t",
         u"--cathash",
         nargs='+',
@@ -46,15 +36,6 @@ def create_parser():
         )
 
     return parser
-
-
-def process_dir(directory, hasher):
-    if not os.path.isdir(directory):
-        print("ERROR: Unable to read directory: {0}".format(directory))
-        sys.exit(1)
-    results = hasher.hash_dir(directory)
-    for result in results:
-        print("{0} *{1}".format(result.hash, result.filename))
 
 
 def process_cathash(filenames, hasher):
@@ -71,22 +52,6 @@ def process_files(filenames, hasher):
         print("{0} *{1}".format(result, filename))
 
 
-def process_checksum_file(checksum_filename, hasher):
-    if not os.path.isfile(checksum_filename):
-        print("ERROR: Unable to read checksum file: {0}".format(checksum_filename))
-        sys.exit(1)
-    basename, ext = os.path.splitext(checksum_filename)
-    if ext.lower() == ".sfv":
-        results = hasher.verify_sfv(checksum_filename)
-    else:
-        results = hasher.verify_checksums(checksum_filename)
-    for result in results:
-        print("{0}: {1}".format(
-            result.filename,
-            "OK" if result.hashes_match else "ERROR"
-        ))
-
-
 def main():
     args = create_parser().parse_args()
 
@@ -96,11 +61,7 @@ def main():
         sys.exit(1)
 
     hasher = FileHash(args.algorithm.lower())
-    if args.checksums:
-        process_checksum_file(args.checksums, hasher)
-    elif args.directory:
-        process_dir(args.directory, hasher)
-    elif args.cathash:
+    if args.cathash:
         process_cathash(args.cathash, hasher)
     else:
         process_files(args.filenames, hasher)

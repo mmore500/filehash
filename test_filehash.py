@@ -63,46 +63,6 @@ class TestFileHash(unittest.TestCase):
                     hasher.hash_file(filename)
                     )
 
-    def test_hash_files(self):
-        """Test the hash_files() method."""
-        for algo in SUPPORTED_ALGORITHMS:
-            hasher = FileHash(algo)
-            # test on singleton lists of filenames
-            for filename in self.expected_results.keys():
-                results = hasher.hash_files([filename])
-                self.assertEqual(len(results), 1)
-                for result in results:
-                    self.assertEqual(
-                        self.expected_results[filename][algo],
-                        result.hash
-                        )
-                    self.assertEqual(filename, result.filename)
-
-            # test on all filenames at once
-            results = hasher.hash_files(self.expected_results.keys())
-            self.assertEqual(len(results), len(self.expected_results))
-            for result in results:
-                self.assertEqual(
-                    self.expected_results[result.filename][algo],
-                    result.hash
-                    )
-
-    def test_hash_dir(self):
-        """"Test the hash_dir() method."""
-        os.chdir("..")
-        for algo in SUPPORTED_ALGORITHMS:
-            for filename in self.expected_results.keys():
-                hasher = FileHash(algo)
-                basename, ext = os.path.splitext(filename)
-                results = hasher.hash_dir("./testdata", "*" + ext)
-                for result in results:
-                    self.assertEqual(
-                        self.expected_results[result.filename][algo],
-                        result.hash
-                        )
-                    if len(results) == 1:
-                        self.assertEqual(filename,result.filename)
-
     def test_cathash_files(self):
         """Test the cathash_files() method."""
         for algo in SUPPORTED_ALGORITHMS:
@@ -139,47 +99,6 @@ class TestFileHash(unittest.TestCase):
                         else 'lorem_ipsum_txt+zip.cat'
                     ][algo]
                 )
-
-    def test_cathash_dir(self):
-        """"Test the cathash_dir() method."""
-        os.chdir("..")
-        for algo in SUPPORTED_ALGORITHMS:
-            hasher = FileHash(algo)
-            self.assertEqual(
-                hasher.cathash_dir("./testdata", "*.txt"),
-                self.expected_results['lorem_ipsum.txt'][algo]
-                )
-            self.assertEqual(
-                hasher.cathash_dir("./testdata", "*.zip"),
-                self.expected_results['lorem_ipsum.zip'][algo]
-                )
-            self.assertEqual(
-                hasher.cathash_dir("./testdata", "*.[ziptxt]*"),
-                self.expected_results[
-                    'lorem_ipsum_zip+txt.cat' if
-                        (self.expected_results['lorem_ipsum.txt'][algo] >
-                            self.expected_results['lorem_ipsum.zip'][algo])
-                        else 'lorem_ipsum_txt+zip.cat'
-                    ][algo]
-                    )
-
-    def test_verify_checksums(self):
-        """Test the verify_checksums() method."""
-        for algo in SUPPORTED_ALGORITHMS:
-            hasher = FileHash(algo)
-            results = [result.hashes_match for result in hasher.verify_checksums("hashes." + algo)]
-            self.assertTrue(all(results))
-
-    def test_verify_sfv(self):
-        """Test the verify_sfv() method."""
-        hasher = FileHash('crc32')
-        results = [result.hashes_match for result in hasher.verify_sfv("lorem_ipsum.sfv")]
-        self.assertTrue(all(results))
-
-    def test_verify_sfv_neg(self):
-        """Test that verify_sfv() raises an exception if it is not using crc32."""
-        hasher = FileHash('sha1')
-        self.assertRaises(TypeError, hasher.verify_sfv, "lorem_ipsum.sfv")
 
 
 class TestZlibHasherSubclasses(unittest.TestCase):
@@ -272,28 +191,6 @@ class TestCLI(unittest.TestCase):
 
         args = self.parser.parse_args(['-a', 'sha1', 'lorem_impsum.txt'])
         self.assertEqual(args.filenames, ['lorem_impsum.txt'])
-
-    def test_checksums(self):
-        """
-        Test parsing checksums
-        """
-
-        args = self.parser.parse_args(['-c', 'CHECKSUM'])
-        self.assertEqual(args.checksums, 'CHECKSUM')
-
-        args = self.parser.parse_args(['-a', 'sha1', '-c', 'CHECKSUM'])
-        self.assertEqual(args.checksums, 'CHECKSUM')
-
-    def test_checksums(self):
-        """
-        Test parsing checksums
-        """
-
-        args = self.parser.parse_args(['-c', 'DIRECTORY'])
-        self.assertEqual(args.checksums, 'DIRECTORY')
-
-        args = self.parser.parse_args(['-a', 'sha1', '-c', 'DIRECTORY'])
-        self.assertEqual(args.checksums, 'DIRECTORY')
 
     def test_cathash(self):
         """
