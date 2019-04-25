@@ -138,14 +138,14 @@ class CRC32(ZlibHasherBase):
         return copy
 
 
-class FileHash:
+class FilesHash:
     """
     Class wrapping the hashlib module to facilitate calculating file hashes.
     """
 
     def __init__(self, hash_algorithm='sha256', chunk_size=4096):
         """
-        Initialize the FileHash class.
+        Initialize the FilesHash class.
 
         :param hash_algorithm: String representing the hash algorithm to use.
                                See SUPPORTED_ALGORITHMS to see a list

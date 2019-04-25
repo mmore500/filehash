@@ -9,9 +9,9 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-setup(name='filehash',
-      version='0.1.dev3',
-      description='Module and command-line tool that wraps around hashlib and zlib to facilitate generating checksums / hashes of files and directories.',
+setup(name='fileshash',
+      version='0.0.1',
+      description='Module and command-line tool that wraps around hashlib and zlib to facilitate generating checksums / hashes of files.',
       long_description=long_description,
       long_description_content_type='text/x-rst',
       classifiers=[
@@ -28,15 +28,15 @@ setup(name='filehash',
             "Topic :: Software Development :: Libraries",
             "Topic :: Utilities",
       ],
-      url='https://github.com/leonidessaguisagjr/filehash',
-      author='Leonides T. Saguisag Jr.',
-      author_email='leonidessaguisagjr@gmail.com',
+      url='https://github.com/mmore500/fileshash',
+      author='Matthew Andres Moreno',
+      author_email='m.more500@gmail.com',
       license='MIT',
-      packages=['filehash'],
+      packages=['fileshash'],
       include_package_data=True,
       zip_safe=False,
       entry_points={
           'console_scripts': [
-              'chkfilehash = filehash.filehash_cli:main',
+              'fileshash = fileshash.fileshash_cli:main',
           ],
       })

@@ -2,7 +2,7 @@ import argparse
 import os.path
 import sys
 
-from filehash import FileHash, SUPPORTED_ALGORITHMS
+from fileshash import FilesHash, SUPPORTED_ALGORITHMS
 
 
 default_hash_algorithm = 'sha256'
@@ -60,7 +60,7 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    hasher = FileHash(args.algorithm.lower())
+    hasher = FilesHash(args.algorithm.lower())
     if args.cathash:
         process_cathash(args.cathash, hasher)
     else:

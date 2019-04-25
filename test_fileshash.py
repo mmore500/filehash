@@ -2,14 +2,14 @@ import inspect
 import os.path
 import unittest
 
-import filehash.filehash
-from filehash import FileHash, SUPPORTED_ALGORITHMS
+import fileshash.fileshash
+from fileshash import FilesHash, SUPPORTED_ALGORITHMS
 
-from filehash.filehash_cli import create_parser
+from fileshash.fileshash_cli import create_parser
 
 
 class TestFileHash(unittest.TestCase):
-    """Test the FileHash class."""
+    """Test the FilesHash class."""
 
     def setUp(self):
         # Expected results from https://www.fileformat.info/tool/hash.htm
@@ -57,7 +57,7 @@ class TestFileHash(unittest.TestCase):
         """Test the hash_file() method."""
         for algo in SUPPORTED_ALGORITHMS:
             for filename in self.expected_results.keys():
-                hasher = FileHash(algo)
+                hasher = FilesHash(algo)
                 self.assertEqual(
                     self.expected_results[filename][algo],
                     hasher.hash_file(filename)
@@ -67,13 +67,13 @@ class TestFileHash(unittest.TestCase):
         """Test the cathash_files() method."""
         for algo in SUPPORTED_ALGORITHMS:
             for filename in self.expected_results.keys():
-                hasher = FileHash(algo)
+                hasher = FilesHash(algo)
                 self.assertEqual(
                     self.expected_results[filename][algo],
                     hasher.cathash_files([filename])
                 )
 
-            hasher = FileHash(algo)
+            hasher = FilesHash(algo)
             # shouldn't matter how you order filenames
             self.assertEqual(
                 hasher.cathash_files(['lorem_ipsum.txt', 'lorem_ipsum.zip']),
@@ -107,15 +107,15 @@ class TestZlibHasherSubclasses(unittest.TestCase):
     def setUp(self):
         """Dynamically get the list of subclasses for ZlibHasherBase."""
         def is_zlibhasherbase_subclass(o):
-            return inspect.isclass(o) and issubclass(o, filehash.filehash.ZlibHasherBase)
-        self.zlib_hashers = inspect.getmembers(filehash.filehash,
+            return inspect.isclass(o) and issubclass(o, fileshash.fileshash.ZlibHasherBase)
+        self.zlib_hashers = inspect.getmembers(fileshash.fileshash,
                                                predicate=is_zlibhasherbase_subclass)
         # inspect.getmembers() returns tuples of names and classes.  issubclass()
         # considers a class to be a subclass of itself.  So we need to remove
         # ZlibHasherBase from the list of subclasses, and convert it into a flat
         # list of just the classes (no names).
         self.zlib_hashers = [hasher[1] for hasher in self.zlib_hashers
-                             if hasher[0] != filehash.filehash.ZlibHasherBase.__name__]
+                             if hasher[0] != fileshash.fileshash.ZlibHasherBase.__name__]
 
     def test_name(self):
         """
