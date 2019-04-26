@@ -61,7 +61,7 @@ class TestFileHash(unittest.TestCase):
     def tearDown(self):
         os.chdir(self.current_dir)
 
-    def test_hash_file(self):
+    def test_full_parcel(self):
         """Test the full_parcel() method."""
         for algo in SUPPORTED_ALGORITHMS:
             for filename in self.expected_results.keys():
