@@ -258,9 +258,9 @@ class FilesHash:
         hashes = map(getattr(self,self.file_parcel), filenames)
 
         hash_func = _ALGORITHM_MAP[self.hash_algorithm]()
-        hash_func.update(hashes)
+        hash_func.update("".join(sorted(hashes)))
 
-        return hash_func.hexdigest("".join(sorted(hashes)))
+        return hash_func.hexdigest()
 
     def hash_files(self, filenames):
         """
